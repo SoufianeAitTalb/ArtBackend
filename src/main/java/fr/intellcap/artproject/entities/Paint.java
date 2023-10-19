@@ -3,6 +3,8 @@ package fr.intellcap.artproject.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,9 +35,11 @@ public class Paint implements Serializable {
     private String materials;
 
     @Column(name = "x_dimension")
-    private Double xDimension;
+    @JsonProperty("xDimension")
+    private double xDimension;
     @Column(name = "y_dimension")
-    private Double yDimension;
+    @JsonProperty("yDimension")
+    private double yDimension;
     @Column(name = "desc_paint", length = 100)
     private String descPaint;
 
@@ -61,9 +65,8 @@ public class Paint implements Serializable {
     private List<Command> commands;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "paint")
-
-    private List<Category> categories ;
+    @ManyToOne
+    private Category category ;
 
 
 }

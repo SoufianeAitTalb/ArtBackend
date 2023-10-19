@@ -9,17 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin("**")
 @RestController
@@ -54,6 +54,7 @@ public class PaintController {
     public ResponseEntity<Map<String, String>> addNewPaint(@RequestBody PaintDTO paintDto) {
     Map<String, String> response = new HashMap<>();
 
+    System.out.println(paintDto.toString());
 
 
     if (this.paintService.addNewPaint(paintDto) != null) {
@@ -103,6 +104,40 @@ public class PaintController {
         File file = new File(System.getProperty("user.home")+"/art/images/"+photoName);
         Path path = Paths.get(file.toURI());
         return Files.readAllBytes(path);
+    }
+
+    String uploadDir=System.getProperty("user.home")+"/art/images/";
+    @PostMapping("/files")
+    public List<String> uploadFiles(@RequestParam("file") List<MultipartFile> files) {
+        List<String> fileNames = new ArrayList<>();
+        Optional<Paint> lastRecord = paintRepo.findTopByOrderByPaintIdDesc();
+
+
+        try {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    // Ensure the upload directory exists, if not, create it
+                    File directory = new File(uploadDir);
+                    if (!directory.exists()) {
+                        directory.mkdirs();
+                    }
+
+                    // Save the file to the server
+                    String filePath = uploadDir + File.separator + (lastRecord.get().getPaintId()+1)+".jpg";
+                    File dest = new File(filePath);
+                    file.transferTo(dest);
+
+                    // You can also save additional file metadata or perform other operations as needed
+                    fileNames.add(file.getOriginalFilename());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the error appropriately
+            return null;
+        }
+
+        return fileNames;
     }
 
 

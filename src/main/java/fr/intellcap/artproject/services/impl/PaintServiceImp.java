@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -37,14 +38,20 @@ public class PaintServiceImp implements PaintService {
     public Paint addNewPaint(PaintDTO paintDto) {
         Paint paint = new Paint();
         paint.setName(paintDto.getName());
+        if(paintDto.getArtistId()!=null){
+
         Artist artist=artistRepo.findById(paintDto.getArtistId()).orElse(null);
         paint.setArtist(artist);
+        }
         paint.setMaterials(paintDto.getMaterials());
         paint.setXDimension(paintDto.getXDimension());
         paint.setYDimension(paintDto.getYDimension());
         paint.setDescPaint(paintDto.getDescPaint());
         paint.setDescArtist(paintDto.getDescArtist());
-        paint.setImage(paintDto.getImage());
+        Optional<Paint> lastRecord = paintRepo.findTopByOrderByPaintIdDesc();
+        if(lastRecord.isPresent())
+        paint.setImage((lastRecord.get().getPaintId()+1)+".jpg");
+        else paint.setImage("1.jpg");
         paint.setPrice(paintDto.getPrice());
         paint.setQuantity(paintDto.getQuantity());
         paint.setInventoryStatus(paintDto.getInventoryStatus());
@@ -97,10 +104,7 @@ public class PaintServiceImp implements PaintService {
             commandRepo.deleteById(command.getCommandId());
 
         }
-        List<Category> categories =  paint.getCategories();
-        for (Category category : categories) {
-            categoryRepo.deleteById(category.getCategoryId());
-        }
+
         paintRepo.delete(paint);
     }
 
@@ -126,6 +130,7 @@ public class PaintServiceImp implements PaintService {
 
          paintDto.setPaintId(paint.getPaintId());
          paintDto.setName(paint.getName());
+         if(paint.getArtist()!=null)
         paintDto.setArtistId(paint.getArtist().getUserId());
         paintDto.setMaterials(paint.getMaterials());
         paintDto.setXDimension(paint.getXDimension());
@@ -138,11 +143,9 @@ public class PaintServiceImp implements PaintService {
         paintDto.setInventoryStatus(paint.getInventoryStatus());
         paintDto.setRating(paint.getRating());
 
-        String categories = paint.getCategories().stream()
-                .map(Category::getName) // Map Category objects to their names
-                .collect(Collectors.joining(" "));
 
-        paintDto.setCategory(categories);
+
+        paintDto.setCategory(paint.getCategory().getName());
         return paintDto;
     }
 

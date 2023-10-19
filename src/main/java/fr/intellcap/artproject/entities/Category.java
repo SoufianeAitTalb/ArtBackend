@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,7 @@ public class Category implements Serializable {
     private String name;
 
     @JsonIgnore
-    @ManyToOne
-    private Paint paint;
+    @OneToMany(mappedBy = "category")
+    private List<Paint> paints;
 
 }

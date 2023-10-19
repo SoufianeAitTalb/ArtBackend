@@ -2,6 +2,7 @@ package fr.intellcap.artproject.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.intellcap.artproject.entities.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,10 +22,11 @@ public class PaintDTO {
 
     private String materials;
 
+    @JsonProperty("xDimension")
+    private double xDimension;
 
-    private Double xDimension;
-
-    private Double yDimension;
+    @JsonProperty("yDimension")
+    private double yDimension;
 
     private String descPaint;
 
