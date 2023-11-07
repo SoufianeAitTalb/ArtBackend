@@ -56,6 +56,7 @@ public class PaintServiceImp implements PaintService {
         paint.setQuantity(paintDto.getQuantity());
         paint.setInventoryStatus(paintDto.getInventoryStatus());
         paint.setRating(paintDto.getRating());
+        paint.setCategory(paintDto.getCategory());
         return this.paintRepo.save(paint);
     }
 
@@ -88,7 +89,7 @@ public class PaintServiceImp implements PaintService {
         paint.setQuantity(paintDto.getQuantity());
         paint.setInventoryStatus(paintDto.getInventoryStatus());
         paint.setRating(paintDto.getRating());
-
+        paint.setCategory(paintDto.getCategory());
         return paint;
     }
 
@@ -145,7 +146,7 @@ public class PaintServiceImp implements PaintService {
 
 
 
-        paintDto.setCategory(paint.getCategory().getName());
+        paintDto.setCategory(paint.getCategory());
         return paintDto;
     }
 

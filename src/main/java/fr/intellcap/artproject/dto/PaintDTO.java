@@ -40,7 +40,7 @@ public class PaintDTO {
     private long rating;
 
 
-    private String category;
+    private Category category;
 
 
 }

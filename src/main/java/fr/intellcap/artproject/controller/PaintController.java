@@ -6,6 +6,7 @@ import fr.intellcap.artproject.repositories.PaintRepo;
 import fr.intellcap.artproject.services.PaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.MediaType;
@@ -49,7 +50,8 @@ public class PaintController {
         return this.paintService.loadPaintByPaintId(id);
     }
 
-   
+
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping("/add-paint")
     public ResponseEntity<Map<String, String>> addNewPaint(@RequestBody PaintDTO paintDto) {
     Map<String, String> response = new HashMap<>();
